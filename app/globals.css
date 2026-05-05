@@ -12,7 +12,10 @@
 
 html,
 body {
+  width: 100%;
+  height: 100%;
   min-height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -35,6 +38,8 @@ button {
 }
 
 .tree-page {
+  width: 100%;
+  height: 100vh;
   min-height: 100vh;
   overflow: hidden;
   background: var(--background);
@@ -91,18 +96,104 @@ button {
 .ring-area {
   flex: 1 1 auto;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 24px 36px;
+  position: relative;
 }
 
 .ring-stage {
-  width: min(78vh, 92vw);
-  height: min(78vh, 92vw);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: block;
-  overflow: visible;
+  overflow: hidden;
   touch-action: none;
+}
+
+.project-mark {
+  position: fixed;
+  right: 48px;
+  bottom: 34px;
+  z-index: 10;
+  max-width: min(260px, calc(100vw - 48px));
+  pointer-events: none;
+  text-align: right;
+}
+
+.project-name {
+  color: var(--foreground);
+  font-size: 24px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  opacity: 0.72;
+  text-transform: uppercase;
+}
+
+.build-test {
+  margin-top: 8px;
+  color: rgba(242, 232, 213, 0.42);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.about-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 82px 48px 24px;
+  pointer-events: none;
+}
+
+.about-dialog {
+  position: relative;
+  width: min(380px, calc(100vw - 48px));
+  border: 1px solid var(--button-border);
+  background: rgba(23, 22, 20, 0.94);
+  color: var(--foreground);
+  padding: 28px 30px 30px;
+  pointer-events: auto;
+}
+
+.about-dialog h2 {
+  margin: 0 34px 18px 0;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.about-dialog p {
+  margin: 0;
+  color: rgba(242, 232, 213, 0.78);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.about-dialog p + p {
+  margin-top: 14px;
+}
+
+.about-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--button-border);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.about-close:hover {
+  border-color: var(--foreground);
 }
 
 @media (max-width: 680px) {
@@ -120,5 +211,14 @@ button {
     min-width: 0;
     flex: 1;
     padding-inline: 10px;
+  }
+
+  .project-mark {
+    right: 24px;
+    bottom: 22px;
+  }
+
+  .about-backdrop {
+    padding: 116px 24px 24px;
   }
 }

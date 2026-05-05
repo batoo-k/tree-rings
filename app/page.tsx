@@ -23,12 +23,13 @@ type DotPoint = {
 
 const SECONDS_PER_DOT = 2;
 const INNER_DOT_COUNT = 10;
-const RING_COUNT = 9;
+const RING_COUNT = 30;
 const CENTER = 220;
 const INNER_RADIUS = 36;
 const RING_GAP = 22;
 const DOT_RADIUS = 2;
 const ACCENT_WIDTH = 5;
+const INITIAL_VIEW_BOX = "-77 -77 594 594";
 
 function buildRings() {
   const rings: Ring[] = [];
@@ -101,6 +102,7 @@ export default function Home() {
   const [activeSegments, setActiveSegments] = useState<ActiveSegment[]>([]);
   const [zoom, setZoom] = useState({ scale: 1, x: 0, y: 0 });
   const [dotPoints, setDotPoints] = useState<DotPoint[]>([]);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   useEffect(() => {
     const frameId = requestAnimationFrame(() => {
@@ -192,10 +194,12 @@ export default function Home() {
     });
   };
 
-  const visibleSegments = activeSegments.map((segment) => ({
-    start: segment.start,
-    end: segment.end ?? elapsedTime,
-  }));
+  const visibleSegments = isMounted
+    ? activeSegments.map((segment) => ({
+        start: segment.start,
+        end: segment.end ?? elapsedTime,
+      }))
+    : [];
 
   return (
     <main className="tree-page">
@@ -205,6 +209,13 @@ export default function Home() {
         </div>
 
         <div className="button-row">
+          <button
+            className="timer-button"
+            type="button"
+            onClick={() => setIsAboutOpen(true)}
+          >
+            ABOUT
+          </button>
           <button
             className="timer-button"
             type="button"
@@ -230,17 +241,18 @@ export default function Home() {
       <section className="ring-area" aria-label="Tree rings timeline">
         <svg
           className="ring-stage"
-          viewBox="0 0 440 440"
+          viewBox={INITIAL_VIEW_BOX}
+          preserveAspectRatio="xMidYMid slice"
           role="img"
           aria-label="Concentric tree rings timer visualization"
           onWheel={handleWheel}
         >
-          <g
-            transform={`translate(${zoom.x} ${zoom.y}) scale(${zoom.scale})`}
-          >
-            <g>
-              {isMounted &&
-                dotPoints.map((point) => (
+          {isMounted && (
+            <g
+              transform={`translate(${zoom.x} ${zoom.y}) scale(${zoom.scale})`}
+            >
+              <g>
+                {dotPoints.map((point) => (
                   <circle
                     key={point.key}
                     cx={point.x}
@@ -249,11 +261,10 @@ export default function Home() {
                     fill="#4A4945"
                   />
                 ))}
-            </g>
+              </g>
 
-            <g>
-              {isMounted &&
-                visibleSegments.flatMap((segment, segmentIndex) =>
+              <g>
+                {visibleSegments.flatMap((segment, segmentIndex) =>
                   STATIC_RINGS.flatMap((ring) => {
                     const ringStart = ring.startTime;
                     const ringEnd = ring.startTime + ringDuration(ring);
@@ -297,10 +308,46 @@ export default function Home() {
                     );
                   }),
                 )}
+              </g>
             </g>
-          </g>
+          )}
         </svg>
       </section>
+
+      <div className="project-mark" aria-label="Project name and build check">
+        <div className="project-name">Tree Rings</div>
+        <div className="build-test">build test 2026-05-05</div>
+      </div>
+
+      {isAboutOpen && (
+        <div className="about-backdrop" role="presentation">
+          <section
+            className="about-dialog"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="about-title"
+          >
+            <button
+              className="about-close"
+              type="button"
+              aria-label="Close about dialog"
+              onClick={() => setIsAboutOpen(false)}
+            >
+              ×
+            </button>
+            <h2 id="about-title">Tree Rings</h2>
+            <p>
+              Tree Rings is a visual count-up timer inspired by the quiet growth
+              of tree rings. Time moves along a global elapsed timeline while
+              focused intervals are drawn as warm accent arcs.
+            </p>
+            <p>
+              Paused intervals stay dotted, so each ring preserves both focused
+              time and the spaces between it.
+            </p>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
