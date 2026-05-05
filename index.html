@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tree Rings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="control-bar">
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div class="controls">
+        <button class="btn" id="btn-start" type="button">START</button>
+        <button class="btn" id="btn-pause" type="button">PAUSE</button>
+        <button class="btn" id="btn-reset" type="button">RESET</button>
+      </div>
+    </header>
+    <main class="ring-area">
+      <svg class="ring-stage" id="ring-stage" xmlns="http://www.w3.org/2000/svg"></svg>
+    </main>
+  </div>
+  <script src="main.js" defer></script>
+</body>
+</html>

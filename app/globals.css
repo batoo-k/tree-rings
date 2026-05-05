@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root {
+  --background: #171614;
+  --foreground: #f2e8d5;
+  --button-border: #6a655c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+}
+
+button {
+  font: inherit;
+}
+
+.tree-page {
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--foreground);
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-controls {
+  width: 100%;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 48px;
+}
+
+.timer-display {
+  color: var(--foreground);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-button {
+  min-width: 84px;
+  border: 1px solid var(--button-border);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  padding: 10px 16px;
+}
+
+.timer-button:hover:not(:disabled) {
+  border-color: var(--foreground);
+}
+
+.timer-button:disabled {
+  cursor: default;
+  opacity: 0.28;
+}
+
+.ring-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 24px 36px;
+}
+
+.ring-stage {
+  width: min(78vh, 92vw);
+  height: min(78vh, 92vw);
+  display: block;
+  overflow: visible;
+  touch-action: none;
+}
+
+@media (max-width: 680px) {
+  .tree-controls {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .button-row {
+    width: 100%;
+  }
+
+  .timer-button {
+    min-width: 0;
+    flex: 1;
+    padding-inline: 10px;
+  }
+}

@@ -1,0 +1,84 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #171614;
+  --ring: #4A4945;
+  --accent: #D6A15C;
+  --text: #F2E8D5;
+  --btn-border: #6A655C;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 48px;
+  flex-shrink: 0;
+}
+
+.timer-display {
+  font-size: 20px;
+  letter-spacing: 0.25em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--btn-border);
+  color: var(--text);
+  padding: 8px 20px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--text);
+}
+
+.btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.ring-area {
+  flex: 1;
+  position: relative;
+}
+
+.ring-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
