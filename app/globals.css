@@ -104,9 +104,15 @@ button {
   inset: 0;
   width: 100%;
   height: 100%;
+  cursor: grab;
   display: block;
   overflow: hidden;
   touch-action: none;
+  user-select: none;
+}
+
+.ring-stage.is-dragging {
+  cursor: grabbing;
 }
 
 .project-mark {

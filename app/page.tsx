@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Phase = "idle" | "running" | "paused";
 
@@ -29,7 +29,7 @@ const INNER_RADIUS = 36;
 const RING_GAP = 22;
 const DOT_RADIUS = 2;
 const ACCENT_WIDTH = 5;
-const INITIAL_VIEW_BOX = "-77 -77 594 594";
+const INITIAL_VIEW_BOX = "-225.5 -225.5 891 891";
 
 function buildRings() {
   const rings: Ring[] = [];
@@ -96,6 +96,7 @@ function buildDotPoints(rings: Ring[]) {
 }
 
 export default function Home() {
+  const lastDragPointRef = useRef<{ x: number; y: number } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -103,6 +104,7 @@ export default function Home() {
   const [zoom, setZoom] = useState({ scale: 1, x: 0, y: 0 });
   const [dotPoints, setDotPoints] = useState<DotPoint[]>([]);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const frameId = requestAnimationFrame(() => {
@@ -194,6 +196,41 @@ export default function Home() {
     });
   };
 
+  const handlePointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    lastDragPointRef.current = { x: event.clientX, y: event.clientY };
+    setIsDragging(true);
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (!lastDragPointRef.current) {
+      return;
+    }
+
+    const deltaX = event.clientX - lastDragPointRef.current.x;
+    const deltaY = event.clientY - lastDragPointRef.current.y;
+    lastDragPointRef.current = { x: event.clientX, y: event.clientY };
+
+    setZoom((current) => ({
+      ...current,
+      x: current.x + deltaX,
+      y: current.y + deltaY,
+    }));
+  };
+
+  const stopDragging = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    lastDragPointRef.current = null;
+    setIsDragging(false);
+  };
+
   const visibleSegments = isMounted
     ? activeSegments.map((segment) => ({
         start: segment.start,
@@ -240,12 +277,17 @@ export default function Home() {
 
       <section className="ring-area" aria-label="Tree rings timeline">
         <svg
-          className="ring-stage"
+          className={`ring-stage${isDragging ? " is-dragging" : ""}`}
           viewBox={INITIAL_VIEW_BOX}
           preserveAspectRatio="xMidYMid slice"
           role="img"
           aria-label="Concentric tree rings timer visualization"
           onWheel={handleWheel}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={stopDragging}
+          onPointerCancel={stopDragging}
+          onLostPointerCapture={stopDragging}
         >
           {isMounted && (
             <g
